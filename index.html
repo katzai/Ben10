@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben 10 - Omniverse Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Orbitron:wght@400;700;900&family=Russo+One&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #00ff88;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(15, 25, 35, 0.95);
+            --accent-orange: #ff6b35;
+            --accent-blue: #00d4ff;
+            --accent-purple: #9d4edd;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden;
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-green);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        /* Navbar */
+        .navbar {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            border-bottom: 2px solid var(--primary-green);
+            box-shadow: 0 5px 30px rgba(0, 255, 136, 0.3);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo {
+            z-index: 10001;
+        }
+
+        .logo img {
+            width: 90px;
+            filter: drop-shadow(0 0 10px var(--primary-green));
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px var(--primary-green)); }
+            50% { filter: drop-shadow(0 0 25px var(--primary-green)); }
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 50px;
+            font-family: 'Russo One', sans-serif;
+            font-size: 15px;
+            z-index: 10001;
+        }
+
+        .nav-links li {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-links li::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-blue));
+            transition: width 0.4s ease;
+        }
+
+        .nav-links li:hover::before {
+            width: 100%;
+        }
+
+        .nav-links li:hover {
+            color: var(--primary-green);
+            transform: translateY(-3px);
+            text-shadow: 0 0 20px var(--primary-green);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+            z-index: 10001;
+        }
+
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--primary-green);
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            width: 100%;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, #0a2f1f 0%, #000 70%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 20px 100px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 136, 0.02) 2px, rgba(0, 255, 136, 0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 255, 136, 0.02) 2px, rgba(0, 255, 136, 0.02) 4px);
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary-green);
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        .hero-title {
+            font-family: 'Bangers', cursive;
+            font-size: 100px;
+            background: linear-gradient(45deg, var(--primary-green), var(--accent-blue), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: titlePulse 3s ease-in-out infinite;
+            z-index: 2;
+            letter-spacing: 8px;
+            line-height: 1.2;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .hero-subtitle {
+            font-family: 'Russo One', sans-serif;
+            font-size: 22px;
+            color: var(--accent-blue);
+            text-align: center;
+            margin-bottom: 60px;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            animation: fadeInUp 1.5s ease;
+        }
+
+        /* Swipeable Alien Carousel */
+        .alien-carousel-wrapper {
+            width: 100%;
+            max-width: 1600px;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+
+        .alien-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 40px 0;
+        }
+
+        .alien-track {
+            display: flex;
+            gap: 30px;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: grab;
+            user-select: none;
+            will-change: transform;
+            padding: 10px;
+        }
+
+        .alien-track:active {
+            cursor: grabbing;
+        }
+
+        .alien-track.dragging {
+            transition: none;
+        }
+
+        .alien-card {
+            min-width: 300px;
+            width: 300px;
+            height: 400px;
+            background: linear-gradient(145deg, rgba(0, 255, 136, 0.12), rgba(0, 212, 255, 0.08));
+            border: 2px solid var(--primary-green);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 50px rgba(0, 255, 136, 0.25);
+            flex-shrink: 0;
+        }
+
+        .alien-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.15), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            pointer-events: none;
+        }
+
+        .alien-card:hover::before {
+            left: 100%;
+        }
+
+        .alien-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 70px rgba(0, 255, 136, 0.5);
+            border-color: var(--accent-blue);
+        }
+
+        .alien-card img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+            filter: drop-shadow(0 0 25px rgba(0, 255, 136, 0.4));
+            pointer-events: none;
+        }
+
+        .alien-card:hover img {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        /* Carousel Navigation */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 40px;
+            z-index: 3;
+        }
+
+        .carousel-btn {
+            background: rgba(0, 255, 136, 0.15);
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-weight: bold;
+        }
+
+        .carousel-btn:hover:not(:disabled) {
+            background: var(--primary-green);
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 30px var(--primary-green);
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .dot:hover {
+            background: rgba(0, 255, 136, 0.6);
+        }
+
+        .dot.active {
+            background: var(--primary-green);
+            box-shadow: 0 0 20px var(--primary-green);
+            transform: scale(1.3);
+            border-color: var(--primary-green);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: 64px;
+            text-align: center;
+            margin-bottom: 80px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+            animation: fadeInUp 1s ease;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+        }
+
+        /* Episodes Section */
+        #episodes {
+            background: linear-gradient(180deg, #000, #0a1520, #000);
+        }
+
+        .seasons-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .season {
+            margin-bottom: 100px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .season-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-blue));
+            padding: 30px 50px;
+            border-radius: 25px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .season-header:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.5);
+        }
+
+        .season-header h3 {
+            font-family: 'Russo One', sans-serif;
+            font-size: 28px;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .season-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .episode-count {
+            font-size: 16px;
+            color: #000;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 25px;
+            border-radius: 25px;
+            white-space: nowrap;
+        }
+
+        .watch-on-netflix {
+            background: #E50914;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-family: 'Russo One', sans-serif;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
+            white-space: nowrap;
+        }
+
+        .watch-on-netflix:hover {
+            background: #b20710;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(229, 9, 20, 0.6);
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0;
+        }
+
+        .episode-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .episode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .episode-card:hover::before {
+            left: 100%;
+        }
+
+        .episode-card:hover {
+            transform: translateY(-12px);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 50px rgba(0, 255, 136, 0.4);
+        }
+
+        .episode-number {
+            font-family: 'Russo One', sans-serif;
+            font-size: 16px;
+            color: var(--primary-green);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .episode-title {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        /* About Section */
+        #about {
+            background: radial-gradient(ellipse at center, #1a0a2e 0%, #000 70%);
+        }
+
+        .about-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-text {
+            animation: fadeInLeft 1s ease;
+        }
+
+        .about-text h2 {
+            font-family: 'Bangers', cursive;
+            font-size: 52px;
+            color: var(--primary-green);
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .about-text p {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #ddd;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.12), rgba(0, 212, 255, 0.12));
+            border: 2px solid var(--primary-green);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.4);
+        }
+
+        .stat-number {
+            font-family: 'Bangers', cursive;
+            font-size: 52px;
+            color: var(--primary-green);
+            display: block;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 15px;
+        }
+
+        .about-image {
+            position: relative;
+            animation: fadeInRight 1s ease;
+            display: flex;
+            justify-content: center;
+        }
+
+        .watch-container {
+            position: relative;
+            width: 450px;
+            height: 450px;
+        }
+
+        .omnitrix-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 12px solid var(--primary-green);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+            box-shadow: 
+                0 0 40px rgba(0, 255, 136, 0.6),
+                inset 0 0 40px rgba(0, 255, 136, 0.3);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .omnitrix-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, var(--primary-green), #000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 60px var(--primary-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        .omnitrix-core {
+            width: 110px;
+            height: 110px;
+            background: #000;
+            border: 5px solid var(--primary-green);
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .omnitrix-core::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.9), transparent);
+            animation: scanLine 2s linear infinite;
+        }
+
+        @keyframes scanLine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Games Section */
+        #games {
+            background: linear-gradient(180deg, #000, #0f1f0a, #000);
+        }
+
+        .games-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 45px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 212, 255, 0.15));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .game-card:hover::before {
+            opacity: 1;
+        }
+
+        .game-card:hover {
+            transform: translateY(-18px) scale(1.02);
+            border-color: var(--primary-green);
+            box-shadow: 0 30px 70px rgba(0, 255, 136, 0.5);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .game-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .game-card:hover .game-image img {
+            transform: scale(1.12);
+        }
+
+        .game-placeholder {
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.08);
+            font-family: 'Bangers', cursive;
+        }
+
+        .game-info {
+            padding: 30px;
+        }
+
+        .game-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 22px;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .platform-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--primary-green);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .game-description {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        .play-button {
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-blue));
+            border: none;
+            padding: 14px 35px;
+            border-radius: 30px;
+            color: #000;
+            font-family: 'Russo One', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 20px rgba(0, 255, 136, 0.3);
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .play-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(0, 255, 136, 0.6);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 60px;
+            text-align: center;
+            border-top: 3px solid var(--primary-green);
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--primary-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Russo One', sans-serif;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-blue);
+            text-shadow: 0 0 15px var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 60px;
+            }
+
+            .watch-container {
+                width: 350px;
+                height: 350px;
+            }
+
+            .omnitrix-inner {
+                width: 180px;
+                height: 180px;
+            }
+
+            .omnitrix-core {
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 18px 25px;
+            }
+
+            .logo img {
+                width: 70px;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 76px;
+                left: -100%;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.98);
+                width: 100%;
+                padding: 50px 30px;
+                gap: 35px;
+                transition: left 0.4s ease;
+                border-top: 2px solid var(--primary-green);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(9px, 9px);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(9px, -9px);
+            }
+
+            section {
+                padding: 80px 25px;
+            }
+
+            .hero {
+                padding: 120px 20px 80px;
+            }
+
+            .hero-title {
+                font-size: 56px;
+                letter-spacing: 4px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+                letter-spacing: 4px;
+            }
+
+            .alien-card {
+                min-width: 250px;
+                width: 250px;
+                height: 340px;
+            }
+
+            .section-title {
+                font-size: 42px;
+                margin-bottom: 60px;
+            }
+
+            .season-header {
+                padding: 25px 30px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .season-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .watch-on-netflix {
+                font-size: 12px;
+                padding: 10px 20px;
+            }
+
+            .episodes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .watch-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .omnitrix-inner {
+                width: 150px;
+                height: 150px;
+            }
+
+            .omnitrix-core {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .hero-subtitle {
+                font-size: 14px;
+                letter-spacing: 3px;
+            }
+
+            .alien-card {
+                min-width: 220px;
+                width: 220px;
+                height: 300px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .season-header h3 {
+                font-size: 20px;
+            }
+
+            .about-text h2 {
+                font-size: 36px;
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/logo.png" alt="Ben 10 Logo">
+        </div>
+
+        <ul class="nav-links" id="navLinks">
+            <li onclick="scrollToSection('hero')">Home</li>
+            <li onclick="scrollToSection('episodes')">Episodes</li>
+            <li onclick="scrollToSection('about')">About</li>
+            <li onclick="scrollToSection('games')">Games</li>
+        </ul>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-particles" id="particles"></div>
+        
+        <h1 class="hero-title">BEN 10</h1>
+        <p class="hero-subtitle">It's Hero Time!</p>
+
+        <div class="alien-carousel-wrapper">
+            <div class="alien-carousel">
+                <div class="alien-track" id="alienTrack"></div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prevBtn" aria-label="Previous">‹</button>
+                <div class="carousel-dots" id="carouselDots"></div>
+                <button class="carousel-btn" id="nextBtn" aria-label="Next">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Episodes Section -->
+    <section id="episodes">
+        <h2 class="section-title">All Episodes</h2>
+        <div class="seasons-container" id="seasonsContainer"></div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">About Ben 10</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h2>The Legend Begins</h2>
+                <p>
+                    Ben 10 is an American animated series created by Man of Action Studios and produced by Cartoon Network Studios. 
+                    The story follows Ben Tennyson, a 10-year-old boy who discovers a mysterious alien device called the Omnitrix 
+                    during his summer vacation with his Grandpa Max and cousin Gwen.
+                </p>
+                <p>
+                    The Omnitrix attaches itself to Ben's wrist and gives him the ability to transform into 10 different alien heroes, 
+                    each with unique and incredible powers. With these newfound abilities, Ben takes on the responsibility of fighting 
+                    evil, stopping villains, and saving the world—all while learning valuable lessons about heroism, responsibility, 
+                    and growing up.
+                </p>
+                <p>
+                    The franchise has expanded into multiple series including Ben 10: Alien Force, Ben 10: Ultimate Alien, 
+                    Ben 10: Omniverse, and a 2016 reboot. With its compelling characters, exciting action sequences, and 
+                    imaginative alien designs, Ben 10 has become one of Cartoon Network's most successful and beloved franchises.
+                </p>
+
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Episodes</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">60+</span>
+                        <span class="stat-label">Alien Forms</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2005</span>
+                        <span class="stat-label">First Aired</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Series</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-image">
+                <div class="watch-container">
+                    <div class="omnitrix-outer"></div>
+                    <div class="omnitrix-inner">
+                        <div class="omnitrix-core"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games">
+        <h2 class="section-title">Play Games</h2>
+        <div class="games-grid" id="gamesGrid"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">© 2026 Ben 10 Fan Site. All rights reserved. Ben 10 is a trademark of Cartoon Network.</p>
+        <div class="footer-links">
+            <a href="#hero">Home</a>
+            <a href="#episodes">Episodes</a>
+            <a href="#about">About</a>
+            <a href="#games">Games</a>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Smooth Scroll
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            const navbarHeight = 80;
+            const targetPosition = element.offsetTop - navbarHeight;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+        }
+
+        // Generate Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 25; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Ultra-Smooth Swipeable Alien Carousel
+        const aliens = [
+            'images/alien1.png',
+            'images/alien2.png',
+            'images/alien3.png',
+            'images/alien4.png',
+            'images/alien5.png',
+            'images/alien6.png'
+        ];
+
+        const alienTrack = document.getElementById('alienTrack');
+        const carouselDots = document.getElementById('carouselDots');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentIndex = 0;
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+        const cardWidth = 330; // 300px card + 30px gap
+
+        // Create cards
+        aliens.forEach((alien, index) => {
+            const card = document.createElement('div');
+            card.className = 'alien-card';
+            card.innerHTML = `<img src="${alien}" alt="Alien ${index + 1}" draggable="false">`;
+            alienTrack.appendChild(card);
+        });
+
+        // Create dots
+        aliens.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            carouselDots.appendChild(dot);
+        });
+
+        // Touch/Mouse Events for ultra-smooth dragging
+        alienTrack.addEventListener('mousedown', touchStart);
+        alienTrack.addEventListener('touchstart', touchStart, { passive: true });
+        
+        document.addEventListener('mouseup', touchEnd);
+        document.addEventListener('touchend', touchEnd, { passive: true });
+        
+        alienTrack.addEventListener('mousemove', touchMove);
+        alienTrack.addEventListener('touchmove', touchMove, { passive: true });
+        
+        alienTrack.addEventListener('mouseleave', touchEnd);
+
+        // Prevent context menu on long press
+        alienTrack.addEventListener('contextmenu', e => e.preventDefault());
+
+        function touchStart(event) {
+            isDragging = true;
+            startPos = getPositionX(event);
+            animationID = requestAnimationFrame(animation);
+            alienTrack.classList.add('dragging');
+        }
+
+        function touchMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                currentTranslate = prevTranslate + currentPosition - startPos;
+            }
+        }
+
+        function touchEnd() {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            alienTrack.classList.remove('dragging');
+            
+            const movedBy = currentTranslate - prevTranslate;
+            
+            // Swipe threshold
+            if (movedBy < -50 && currentIndex < aliens.length - 1) {
+                currentIndex++;
+            }
+            if (movedBy > 50 && currentIndex > 0) {
+                currentIndex--;
+            }
+            
+            setPositionByIndex();
+        }
+
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+
+        function animation() {
+            alienTrack.style.transform = `translateX(${currentTranslate}px)`;
+            if (isDragging) requestAnimationFrame(animation);
+        }
+
+        function setPositionByIndex() {
+            currentTranslate = -currentIndex * cardWidth;
+            prevTranslate = currentTranslate;
+            alienTrack.style.transform = `translateX(${currentTranslate}px)`;
+            updateDots();
+            updateButtons();
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function updateButtons() {
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === aliens.length - 1;
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            setPositionByIndex();
+        }
+
+        // Navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                setPositionByIndex();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < aliens.length - 1) {
+                currentIndex++;
+                setPositionByIndex();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                currentIndex--;
+                setPositionByIndex();
+            } else if (e.key === 'ArrowRight' && currentIndex < aliens.length - 1) {
+                currentIndex++;
+                setPositionByIndex();
+            }
+        });
+
+        // Initialize
+        updateButtons();
+
+        // Episodes Data
+        const seasonsData = [
+            {
+                name: "Ben 10 (Original Series)",
+                count: 52,
+                netflixUrl: "https://www.netflix.com/title/70152579",
+                episodes: [
+                    "And Then There Were 10", "Washington B.C.", "The Krakken", "Permanent Retirement",
+                    "Hunted", "Tourist Trap", "Kevin 11", "The Alliance", "Last Laugh", "Lucky Girl",
+                    "A Small Problem", "Side Effects", "Secrets (Part 1)", "Secrets (Part 2)", "Truth",
+                    "The Big Tick", "Framed", "Gwen 10", "Grudge Match", "The Galactic Enforcers",
+                    "Camp Fear", "Ultimate Weapon", "Tough Luck", "They Lurk Below", "Ghostfreaked Out",
+                    "Dr. Animo and the Mutant Ray", "Back with a Vengeance", "Divided We Stand",
+                    "Don't Drink the Water", "Big Fat Alien Wedding", "Ben 4 Good Buddy", "Ready to Rumble",
+                    "Ken 10", "Ben 10 vs. the Negative 10 (Part 1)", "Ben 10 vs. the Negative 10 (Part 2)",
+                    "Midnight Madness", "A Change of Face", "Merry Christmas", "Benwolf", "Game Over",
+                    "Super Alien Hero Buddy Adventures", "Under Wraps", "The Unnaturals", "Monster Weather",
+                    "The Return", "Be Afraid of the Dark", "The Visitor", "Perfect Day", "Divided We Stand",
+                    "Don't Drink the Water", "Big Fat Alien Wedding", "Ben 10: Secret of the Omnitrix"
+                ]
+            },
+            {
+                name: "Ben 10: Alien Force",
+                count: 46,
+                netflixUrl: "https://www.netflix.com/title/70152580",
+                episodes: [
+                    "Ben 10 Returns (Part 1)", "Ben 10 Returns (Part 2)", "Everybody Talks About the Weather",
+                    "Kevin's Big Score", "All That Glitters", "Max Out", "Pier Pressure", "What Are Little Girls Made Of?",
+                    "The Gauntlet", "Paradox", "Be-Knighted", "Plumbers' Helpers", "X = Ben + 2", "Simple",
+                    "Don't Fear the Repo", "Voided", "Inside Man", "Birds of a Feather", "Unearthed",
+                    "War of the Worlds (Part 1)", "War of the Worlds (Part 2)", "Darkstar Rising",
+                    "Alone Together", "Good Copy, Bad Copy", "Save the Last Dance", "Undercover",
+                    "Pet Project", "Grounded", "The Secret of Chromastone", "Above and Beyond",
+                    "Vendetta", "Single-Handed", "If All Else Fails", "In Charm's Way", "Ghost Town",
+                    "Trade-Off", "Busy Box", "Con of Rath", "Primus", "Time Heals",
+                    "The Final Battle (Part 1)", "The Final Battle (Part 2)", "Vengeance of Vilgax (Part 1)",
+                    "Vengeance of Vilgax (Part 2)", "Inferno", "Fool's Gold"
+                ]
+            },
+            {
+                name: "Ben 10: Ultimate Alien",
+                count: 52,
+                netflixUrl: "https://www.netflix.com/title/70152581",
+                episodes: [
+                    "Fame", "Duped", "Hit 'Em Where They Live", "Video Games", "Escape from Aggregor",
+                    "Too Hot to Handle", "Andreas' Fault", "Fused", "Hero Time", "Ultimate Aggregor",
+                    "Map of Infinity", "Reflected Glory", "Deep", "Where the Magic Happens", "Perplexahedron",
+                    "The Forge of Creation", "...Nor Iron Bars a Cage", "The Enemy of My Enemy",
+                    "Absolute Power (Part 1)", "Absolute Power (Part 2)", "The Creature from Beyond",
+                    "Basic Training", "It's Not Easy Being Gwen", "Ben 10,000 Returns", "Moonstruck",
+                    "The Eggman Cometh", "Night of the Living Nightmare", "The Ultimate Enemy (Part 1)",
+                    "The Ultimate Enemy (Part 2)", "The Purge", "Simple", "Don't Fear the Repo",
+                    "The Transmogrification of Eunice", "Eye of the Beholder", "Viktor: The Spoils",
+                    "The Big Story", "Girl Trouble", "Revenge of the Swarm", "The Widening Gyre",
+                    "The Mother of All Vreedles", "A Knight to Remember", "Solitary Alignment",
+                    "Return to Forever", "The Ultimate Sacrifice", "Greetings from Techadon",
+                    "The Flame Keepers' Circle", "Double or Nothing", "The Perfect Girlfriend",
+                    "The Ultimate Enemy (Part 1)", "The Ultimate Enemy (Part 2)", "Catch a Falling Star", "The Eggman Cometh"
+                ]
+            },
+            {
+                name: "Ben 10: Omniverse",
+                count: 80,
+                netflixUrl: "https://www.netflix.com/title/70300562",
+                episodes: [
+                    "The More Things Change (Part 1)", "The More Things Change (Part 2)", "A Jolt from the Past",
+                    "Hot Stretch", "It Was Them", "Young One", "Many Happy Returns", "Gone Fishin'",
+                    "Blukic and Driba Go to Area 51", "Have I Got a Deal for You", "The Ballad of Mr. Baumann",
+                    "The Frogs of War (Part 1)", "The Frogs of War (Part 2)", "Trouble Helix",
+                    "So Long, and Thanks for All the Smoothies", "Outbreak", "Malefactor", "Breakpoint",
+                    "Tummy Trouble", "Of Predators and Prey (Part 1)", "Of Predators and Prey (Part 2)",
+                    "Showdown (Part 1)", "Showdown (Part 2)", "Store 23", "The Rooters of All Evil",
+                    "Weapon XI (Part 1)", "Weapon XI (Part 2)", "Arrested Development", "Rules of Engagement",
+                    "Cough It Up", "Bengeance Is Mine", "Rad Monster Party", "Evil's Encore",
+                    "The Vampire Strikes Back", "Collect This", "Stuck on You", "Let's Do the Time War Again",
+                    "The Secret of Dos Santos", "The Ultimate Heist", "While You Were Away", "OTTO Motives",
+                    "Showdown (Part 1)", "Showdown (Part 2)", "Clyde Five", "Story, Bored",
+                    "For a Few Brains More", "Fistful of Brains", "Vilgax Must Croak", "Rad",
+                    "Charmed, I'm Sure", "The Vengers", "T.G.I.S.", "The Frogs of War (Part 1)",
+                    "The Frogs of War (Part 2)", "Vreedlemania", "Special Delivery", "Return to Forever",
+                    "Malgax Attacks", "The Most Dangerous Game Show", "Breakpoint", "The Color of Monkey",
+                    "Bengeance Is Mine", "Sssssss", "Food Around the Corner", "Malefactor",
+                    "Rad Monster Party", "Evil's Encore", "Charmed, I'm Sure", "The Vampire Strikes Back",
+                    "Vilgax Must Croak", "Max's Monster", "Roots of All Evil", "Weapon XI (Part 1)",
+                    "Weapon XI (Part 2)", "The Most Dangerous Game Show", "Showdown (Part 1)",
+                    "Showdown (Part 2)", "A New Dawn", "And Then There Was Ben", "And Then There Were None"
+                ]
+            },
+            {
+                name: "Ben 10 (2016 Reboot)",
+                count: 49,
+                netflixUrl: "https://www.netflix.com/title/80116593",
+                episodes: [
+                    "Waterfilter", "The Ring Leader", "Take 10", "Freaky Gwen Ben", "Rustbucket RIP",
+                    "Adventures in Babysitting", "Scared Silly", "Animo Farm", "Clown College", "Drive You Crazy",
+                    "The Filth", "Villain Time", "Don't Laze Me, Bro", "Permanent Retirement", "Riding the Storm Out",
+                    "The Clocktopus", "Steam is the Word", "I Don't Like You", "Recipe for Disaster",
+                    "Story, Bored", "Growing Pains", "Shhh!", "Bright Lights, Black Hearts",
+                    "O Mother, Where Art Thou?", "Animorphosis", "Xingo Nation", "Rath of Con",
+                    "The 11th Alien (Part 1)", "The 11th Alien (Part 2)", "Creature Feature",
+                    "You Remind Me of Someone", "The Feels", "The Most Dangerous Game Show",
+                    "Innervasion (Part 1)", "Innervasion (Part 2)", "Innervasion (Part 3)",
+                    "Innervasion (Part 4)", "Innervasion (Part 5)", "Chicken in Chichen Itza (Part 1)",
+                    "Chicken in Chichen Itza (Part 2)", "Xingo's Back", "Bounty Ball", "Half-Sies",
+                    "Introducing Kevin 11", "Steamrolled", "Bright Lights, Black Hearts",
+                    "A Fistful of Brains", "For a Few Brains More", "Franken-Fight"
+                ]
+            }
+        ];
+
+        // Render Episodes
+        const seasonsContainer = document.getElementById('seasonsContainer');
+        seasonsData.forEach((season, index) => {
+            const seasonDiv = document.createElement('div');
+            seasonDiv.className = 'season';
+            seasonDiv.style.animationDelay = `${index * 0.1}s`;
+
+            const seasonHeader = document.createElement('div');
+            seasonHeader.className = 'season-header';
+            seasonHeader.innerHTML = `
+                <h3>${season.name}</h3>
+                <div class="season-actions">
+                    <span class="episode-count">${season.count} Episodes</span>
+                    <a href="${season.netflixUrl}" target="_blank" rel="noopener" class="watch-on-netflix">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M5.398 0v.006c3.028 8.556 5.37 15.175 8.348 23.596 2.344.058 4.85.398 4.854.398-2.8-7.924-5.923-16.747-8.487-24zm8.489 0v9.63L18.6 22.951c-.043-7.86-.004-15.913.002-22.95zM5.398 1.05V24c2.822-.436 4.987-.86 8.5-1.05v-9.63z"/>
+                        </svg>
+                        Watch on Netflix
+                    </a>
+                </div>
+            `;
+
+            const episodesGrid = document.createElement('div');
+            episodesGrid.className = 'episodes-grid';
+
+            season.episodes.forEach((ep, epIndex) => {
+                const episodeCard = document.createElement('div');
+                episodeCard.className = 'episode-card';
+                episodeCard.innerHTML = `
+                    <div class="episode-number">Episode ${epIndex + 1}</div>
+                    <div class="episode-title">${ep}</div>
+                `;
+                episodesGrid.appendChild(episodeCard);
+            });
+
+            seasonDiv.appendChild(seasonHeader);
+            seasonDiv.appendChild(episodesGrid);
+            seasonsContainer.appendChild(seasonDiv);
+        });
+
+        // Games Data
+        const gamesData = [
+            {
+                title: "Ben 10: Omniverse",
+                description: "Play as Ben Tennyson and transform into aliens to battle villains in this action-packed adventure!",
+                image: "game1.png",
+                platform: "Steam",
+                url: "https://store.steampowered.com/search/?term=ben+10"
+            },
+            {
+                title: "Ben 10: Power Trip",
+                description: "Explore an expansive RPG world and unlock powerful alien transformations!",
+                image: "game2.png",
+                platform: "Google Play",
+                url: "https://play.google.com/store/apps/details?id=com.fungames.ben10"
+            },
+            {
+                title: "Ben 10: Alien Experience",
+                description: "Battle enemies and protect the city using Ben's incredible alien transformations!",
+                image: "game3.png",
+                platform: "Google Play",
+                url: "https://play.google.com/store/search?q=ben%2010&c=apps"
+            },
+            {
+                title: "Ben 10: Upgrade Chasers",
+                description: "Race through levels and upgrade your aliens in this fast-paced runner!",
+                image: "game4.png",
+                platform: "Google Play",
+                url: "https://play.google.com/store/apps/details?id=com.turner.ben10"
+            },
+            {
+                title: "Ben 10: Omnitrix Hero",
+                description: "Master the Omnitrix and save the universe from evil forces!",
+                image: "game5.png",
+                platform: "Steam",
+                url: "https://store.steampowered.com/search/?term=ben+10"
+            },
+            {
+                title: "Ben 10: Alien Force",
+                description: "Team up with Gwen and Kevin to defeat the Highbreed invasion!",
+                image: "game6.png",
+                platform: "Cartoon Network",
+                url: "https://www.cartoonnetwork.com/games/ben-10"
+            },
+            {
+                title: "Ben 10: Hero Time",
+                description: "Transform into different aliens and complete challenging missions!",
+                image: "game7.png",
+                platform: "Google Play",
+                url: "https://play.google.com/store/search?q=ben%2010%20hero&c=apps"
+            },
+            {
+                title: "Ben 10: Galactic Racing",
+                description: "Race as your favorite aliens across cosmic tracks and alien planets!",
+                image: "game8.png",
+                platform: "Steam",
+                url: "https://store.steampowered.com/search/?term=ben+10+racing"
+            },
+            {
+                title: "Ben 10: Up to Speed",
+                description: "Run, jump, and transform through endless levels in this action runner!",
+                image: "game9.png",
+                platform: "Google Play",
+                url: "https://play.google.com/store/apps/details?id=com.turner.ben10uptospeed"
+            }
+        ];
+
+        // Render Games
+        const gamesGrid = document.getElementById('gamesGrid');
+        gamesData.forEach(game => {
+            const gameCard = document.createElement('a');
+            gameCard.className = 'game-card';
+            gameCard.href = game.url;
+            gameCard.target = '_blank';
+            gameCard.rel = 'noopener';
+            gameCard.innerHTML = `
+                <div class="game-image">
+                    <img src="images/${game.image}" alt="${game.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="game-placeholder" style="display: none;">GAME</div>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-title">${game.title}</h3>
+                    <div class="platform-badge">
+                        ${game.platform === 'Google Play' ? '📱' : game.platform === 'Steam' ? '🎮' : '🌐'} ${game.platform}
+                    </div>
+                    <p class="game-description">${game.description}</p>
+                    <button class="play-button">Play Now</button>
+                </div>
+            `;
+            gamesGrid.appendChild(gameCard);
+        });
+    </script>
+</body>
+</html>
